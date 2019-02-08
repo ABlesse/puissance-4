@@ -1,0 +1,43 @@
+- const map = new Map();
+- map.set(Symbol.for('free'), {symbol:" ", class:""});
+- map.set(Symbol.for('player1'), {symbol:"O", class:"p1"});
+- map.set(Symbol.for('player2'), {symbol:"O", class:"p2"});
+
+html
+  head
+    title= "Puissance 4"
+    style(type='text/css').
+      body {
+        text-align:center;
+      }
+      table, td {
+        border-collapse: collapse;
+        border: 1px solid black;
+        margin-left:auto; 
+        margin-right:auto;
+      }
+      div {
+        height: 100px;
+        width: 100px;
+        text-align: center;
+        font-size: 90px;
+      }
+      .p1 {
+        color: red;
+      }
+      .p2 {
+        color: blue;
+      }
+
+  body
+    h1=message
+    a(href="/")
+      button="Play again"
+    table
+      -for(let i=0; i<6; i++) {
+      tr
+        -for(let u=0; u<7; u++) {
+        td
+          div(class=map.get(grid[i][u]).class)=map.get(grid[i][u]).symbol
+        -}
+      -}
