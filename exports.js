@@ -57,15 +57,34 @@ class ExportClass {
             column = i%7;
             if(state.grid[row][column] === Symbol.for('free')) count++;
         }
-        return (count === 0) ? true : false;
+        return (count === 0);
+    }
+    isFirstTurn(state) {
+        let filledCount = 0;
+        for(let i=0; i<42; i++) {
+            if(state.grid[Math.floor(i/7)][i%7] != Symbol.for('free')) filledCount++;
+        }
+        return filledCount <= 1;
     }
     playIA(state, rig) {
         let col = rig || -1
+        if(this.isFirstTurn(state)) col = this.IAFirstTurn(state, Math);
         if(col === -1) col = this.IASelect(state, 2);
         if(col === -1) col = this.IASelect(state, 1);
         if(col === -1) col = this.IASetup(state);
         if(col === -1) col = this.IARandomSelect(state);
         return this.play(state, col);
+    }
+    IAFirstTurn(state, math) {
+        if(state.grid[5][0] != Symbol.for('free')) return 1;
+        if(state.grid[5][6] != Symbol.for('free')) return 5;
+        for(let i=1; i<6; i++) {
+            if(state.grid[5][i] != Symbol.for('free')) {
+                let rng = math.floor(math.random() * 2)
+                return rng === 0 ? i-1 : i+1;
+            }
+        }
+        return -1;
     }
     IARandomSelect(state) {
         let col = Math.floor(Math.random() * 7);
@@ -73,7 +92,7 @@ class ExportClass {
         for(let i=0; i<7; i++) {
             if((state.grid[0][i] === Symbol.for('free')) && (!this.IAMoveIsDangerous(state, i))) safeSpotCount++;
         }
-        while((state.grid[0][col] != Symbol.for('free')) && (!this.IAMoveIsDangerous(state, col) || safeSpotCount === 0)) {
+        while((state.grid[0][col] != Symbol.for('free')) || (this.IAMoveIsDangerous(state, col) && safeSpotCount > 0)) {
             col =  Math.floor(Math.random() * 7);
         }
         return col;

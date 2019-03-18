@@ -322,3 +322,79 @@ describe("IA danger detecter", function() {
     expect(actual).toEqual(true);
   });
 });
+
+describe("First turn detector", function() {
+  it("should return false if it isn't the first turn", function() {
+    let state = {player:2,grid:[
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('player1'),Symbol.for('player2'),Symbol.for('player1'),Symbol.for('free'),Symbol.for('free')]
+    ]};
+    expect(exp.isFirstTurn(state)).toEqual(false);
+  });
+  it("should return true if it is the first turn", function() {
+    let state = {player:2,grid:[
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('player1'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')]
+    ]};
+    expect(exp.isFirstTurn(state)).toEqual(true);
+  });
+  it("should check all lines", function() {
+    let state = {player:2,grid:[
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('player1'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('player2'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('player1'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')]
+    ]};
+    expect(exp.isFirstTurn(state)).toEqual(false);
+  });
+});
+
+describe("IA first turn", function() {
+  it("should play near the spot of the player", function() {
+    let state = {player:2,grid:[
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('player1'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')]
+    ]};
+    expect(exp.IAFirstTurn(state, Math)).toEqual(1);
+  });
+  it("should play near the spot of the player no matter which", function() {
+    let state = {player:2,grid:[
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('player1')]
+    ]};
+    expect(exp.IAFirstTurn(state, Math)).toEqual(5);
+  });
+  it("should pick a spot randomly if two are available", function() {
+    let math = {
+      floor: (nb) => nb,
+      random : () => 1
+    }
+    let state = {player:2,grid:[
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')],
+      [Symbol.for('free'),Symbol.for('free'),Symbol.for('free'),Symbol.for('player1'),Symbol.for('free'),Symbol.for('free'),Symbol.for('free')]
+    ]};
+    expect(exp.IAFirstTurn(state, math)).toEqual(4);
+  });
+});
